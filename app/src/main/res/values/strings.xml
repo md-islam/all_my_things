@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">AllMyThings</string>
+    <string name="app_name_text">All My Things</string>
+    <string name="loginEmailHint">example@xyz.com</string>
+    <string name="signUpEmailHint">Email address</string>
+    <string name="loginPasswordHint">********</string>
+    <string name="create_account_clickable">No account yet? Create one</string>
+    <string name="loginButtonText">LOGIN</string>
+    <string name="sign_up_text">Join All My Things</string>
+    <string name="forgot_password_text">Forgot password?</string>
+    <string name="signUP_button_text">sign up !</string>
+</resources>

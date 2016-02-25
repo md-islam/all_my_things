@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="edu.islam01sjsu.md.allmythings.MainActivity"
+    android:background="#be3135">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/app_name_text"
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="37dp"
+        android:textColor="#f7ff0b"
+        android:textSize="21dp"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/login_email"
+        android:hint="@string/loginEmailHint"
+        android:textColorHint="#FFFFFF"
+        android:layout_below="@+id/textView"
+        android:layout_alignLeft="@+id/login_Password"
+        android:layout_alignStart="@+id/login_Password"
+        android:layout_marginTop="54dp"
+        android:text="aeinul.islam@gmail.com"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/login_Password"
+        android:hint="@string/loginPasswordHint"
+        android:textColorHint="#FFFFFF"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:text="abcd"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/loginButtonText"
+        android:id="@+id/loginButton"
+        android:layout_marginTop="41dp"
+        android:background="#960202"
+        android:textColor="#ffffff"
+        android:layout_below="@+id/login_Password"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/create_account_clickable"
+        android:id="@+id/signUP_clickable_text"
+        android:textColor="#ffffff"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/login_Password"
+        android:layout_alignEnd="@+id/login_Password"
+        android:layout_marginBottom="41dp"
+        android:onClick="onClick"
+        android:clickable="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/forgot_password_text"
+        android:id="@+id/forgotPassword_clickable_text"
+        android:layout_below="@+id/loginButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
+        android:textColor="#7ee861"
+        android:textSize="16dp"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="423dp"
+        android:layout_marginStart="423dp"
+        android:layout_marginBottom="104dp"/>
+</RelativeLayout>
