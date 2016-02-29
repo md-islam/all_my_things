@@ -9,4 +9,7 @@
     <string name="sign_up_text">Join All My Things</string>
     <string name="forgot_password_text">Forgot password?</string>
     <string name="signUP_button_text">sign up !</string>
+    <string name="logout_text">Log Out</string>
+    <string name="openDrawer">open navigation drawer</string>
+    <string name="closeDrawer">close navigation drawer</string>
 </resources>
