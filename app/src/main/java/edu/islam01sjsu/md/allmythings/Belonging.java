@@ -8,18 +8,29 @@ import android.graphics.Bitmap;
 public class Belonging {
     String imageString;
     String description;
-    Bitmap itemBitmap;
-    String itemName;
+    // Bitmap itemBitmap;
+    // String itemName;
     // date bought
     // date taken
     // lent
     //
+    public Belonging(){
 
-    Belonging(String description, Bitmap itemBitmap){
-        this.description = description;
-        this.itemBitmap = itemBitmap;
     }
 
+
+    public Belonging(String description, String imageString){
+        this.description = description;
+        this.imageString = imageString;
+    }
+
+
+    public String getImageString(){
+        return imageString;
+    }
+    public String getDescription(){
+        return description;
+    }
 
 
 
