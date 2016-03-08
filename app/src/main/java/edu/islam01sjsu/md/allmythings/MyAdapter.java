@@ -8,20 +8,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
 /**
  * Created by hp1 on 28-12-2014.
  */
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ItemViewHolder> {
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ItemViewHolder> implements  View.OnClickListener{
      private List<Belonging> belongings;
      LayoutInflater inflater;
+     Context ctx;
 
     MyAdapter(List<Belonging> belongings, Context context){
         this.belongings = belongings;
         inflater = LayoutInflater.from(context);
+        ctx = context;
     }
+
+    @Override
+    public void onClick(View v) {
+        Toast.makeText(ctx, "item clicked", Toast.LENGTH_LONG).show();
+    }
+
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
@@ -35,8 +44,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ItemViewHolder> {
             cv = (CardView)itemView.findViewById(R.id.cv);
             mItemDescription = (TextView)itemView.findViewById(R.id.item_description);
             mItemImage =(ImageView)itemView.findViewById(R.id.item_photo);
+
+
             // Here we set the appropriate view in accordance with the the view type as passed when the holder object is created
         }
+
+
 
 
     }
@@ -60,4 +73,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ItemViewHolder> {
         ivh.mItemDescription.setText(belongings.get(i).description);
         ivh.mItemImage.setImageBitmap(belongings.get(i).itemBitmap);
     }
+
+
 }

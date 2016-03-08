@@ -9,6 +9,11 @@ public class Belonging {
     String imageString;
     String description;
     Bitmap itemBitmap;
+    String itemName;
+    // date bought
+    // date taken
+    // lent
+    //
 
     Belonging(String description, Bitmap itemBitmap){
         this.description = description;

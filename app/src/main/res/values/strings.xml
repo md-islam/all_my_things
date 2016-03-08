@@ -12,4 +12,8 @@
     <string name="logout_text">Log Out</string>
     <string name="openDrawer">open navigation drawer</string>
     <string name="closeDrawer">close navigation drawer</string>
+    <string name="title_activity_todelete">todelete</string>
+    <string name="item_name">ITEM NAME</string>
+    <string name="item_description">description</string>
+    <string name="item_price">Price</string>
 </resources>

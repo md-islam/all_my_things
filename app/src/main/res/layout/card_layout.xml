@@ -2,17 +2,17 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                                     android:layout_width="match_parent"
                                     android:layout_height="80dp"
-                                    android:layout_marginBottom="8dp"
-                                    android:layout_marginLeft="16dp"
-                                    android:layout_marginRight="16dp"
-                                    android:background="#C5CAE9"
-                                    android:id="@+id/cv">
+                                    android:id="@+id/cv"
+                                    android:clickable="true"
+                                    android:background="?android:selectableItemBackground">
 
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:clickable="true"
+        android:background="?android:selectableItemBackground">
 
         <ImageView
             android:layout_width="wrap_content"
