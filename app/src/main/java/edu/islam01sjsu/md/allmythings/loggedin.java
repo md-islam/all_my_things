@@ -1,62 +1,68 @@
 package edu.islam01sjsu.md.allmythings;
 
-import android.content.ClipData;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.widget.DrawerLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
-import android.util.Base64;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-import com.firebase.client.AuthData;
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.firebase.ui.FirebaseRecyclerAdapter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class loggedin extends AppCompatActivity {
     FirebaseRecyclerAdapter<Belonging,ItemViewHolder> fAdapter;
+
     //private List<Belonging> belongings;
     RecyclerView mRecyclerView;    // Declaring RecyclerView
     Firebase FBref = new Firebase("https://allmythings2016.firebaseio.com/");
     RecyclerView.Adapter mAdapter; // Declaring Adapter For Recycler View
     RecyclerView.LayoutManager mLayoutManager;  // Declaring Layout Manager as a linear layout manager
     CoordinatorLayout mCoordinatorLayout;
-    String userID;
-
+    FragmentManager fm = getSupportFragmentManager();
+    String userID = FBref.getAuth().getUid();
     private FloatingActionButton mFab;
     static final int REQUEST_IMAGE_CAPTURE = 1;
+
+
+    //**dialog fragment components;
+    private Button mSaveButton;
+    private Button mTakePictureButton;
+    private EditText mItemEdit;
+    private EditText mItemDescription;
+    private EditText mItemPriceEdit;
+    private ImageView mItemImage;
+
+
 
     @Override
     protected void onStart() {
@@ -64,9 +70,10 @@ public class loggedin extends AppCompatActivity {
         Firebase.setAndroidContext(this);
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+
         //************************//
         //initialize belongings
-       // belongings = new ArrayList<>();
+        // belongings = new ArrayList<>();
         userID = FBref.getAuth().getUid();
 
 
@@ -76,11 +83,11 @@ public class loggedin extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);                 // Setting the layout Manager
         fAdapter = new FirebaseRecyclerAdapter<Belonging, ItemViewHolder>(Belonging.class,
                                                                            R.layout.card_layout,ItemViewHolder.class
-                                                                            ,FBref.child("photos").child("5cf0a440-3192-4e29-af0d-945a3f5f9869")) {
+                                                                            ,FBref.child("photos").child(userID)) {
             @Override
             protected void populateViewHolder(ItemViewHolder ivh, Belonging belonging, int i) {
 
-                  ivh.mItemDescription.setText(belonging.description);
+                  ivh.mItemDescription.setText(belonging.itemName);
                   byte[] decodedString = android.util.Base64.decode(belonging.imageString, android.util.Base64.DEFAULT);
                   Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                   ivh.mItemImage.setImageBitmap(decodedByte);
@@ -111,10 +118,14 @@ public class loggedin extends AppCompatActivity {
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                File file = getFile();
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-                startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+//                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                File file = getFile();
+//                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+//                startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+
+              showItemRegistrationDialog();
+
+
             }
         });
 
@@ -124,9 +135,84 @@ public class loggedin extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loggedin);
-        Firebase.setAndroidContext(this);
+        Firebase.setAndroidContext(getApplicationContext());
+    }
+
+    public void showItemRegistrationDialog(){
+        FragmentManager fm = getSupportFragmentManager();
+        RegisterItemDialog rid = new RegisterItemDialog();
+        rid.show(fm,"fragment_register_item");
+        fm.executePendingTransactions();
+        final Dialog dialog = rid.getDialog();
+
+
+        //initialize buttons
+        mTakePictureButton = (Button) dialog.findViewById(R.id.dialogTakePictureButton);
+        mItemEdit = (EditText) dialog.findViewById(R.id.item_name);
+        mItemDescription = (EditText) dialog.findViewById(R.id.item_description);
+        mItemPriceEdit = (EditText) dialog.findViewById(R.id.item_price);
+        mSaveButton = (Button) dialog.findViewById(R.id.dialogSaveButton);
+        mItemImage = (ImageView) dialog.findViewById(R.id.dialog_item_image);
+
+
+        //Set actions
+        mTakePictureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                File file = getFile();
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+            }
+
+
+        });
+
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String itemName = mItemEdit.getText().toString();
+                String itemDescription = mItemDescription.getText().toString();
+                double itemPrice = 0;
+                Bitmap imageFromPreview=null;
+                if(!(mItemPriceEdit.getText().toString().equals(""))){
+                    itemPrice = Double.parseDouble(mItemPriceEdit.getText().toString());
+                }
+                if(mItemImage.getDrawable()!=null)
+                {
+                    imageFromPreview=((BitmapDrawable)mItemImage.getDrawable()).getBitmap();
+                }
+                else{
+                    //code to show a toast
+                }
+                if(!(mItemPriceEdit.getText().toString().equals("")) && !(itemName.equals("")) &&
+                        !(itemDescription.equals("")) && imageFromPreview !=null)
+                    {
+                        //encode this shit to firebase
+                        encodeToFirebase(itemName,itemDescription, itemPrice, imageFromPreview);
+                        dialog.dismiss();
+
+
+                    }
+                else{
+                    Toast.makeText(getApplicationContext(), "All data including image must be provided",
+                            Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Bitmap bm = getImageBitmap();
+        if(bm!=null && mItemImage != null){
+            mItemImage.setImageBitmap(bm);
+        }
+    }
+
 
     private File getFile() {
         File folder = new File("sdcard/camera_app");
@@ -140,7 +226,7 @@ public class loggedin extends AppCompatActivity {
 
 
 
-    // needs refining
+    // needs refining considering app activity lifecycle
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         String path = "sdcard/camera_app/cam_image.jpg";
@@ -149,13 +235,11 @@ public class loggedin extends AppCompatActivity {
         //picture not taken handler and back button is hit
         if (resultCode != RESULT_OK)
         {
-            Snackbar snackbar = Snackbar
-                    .make(mCoordinatorLayout, "Item not added to inventory", Snackbar.LENGTH_LONG);
-
+            Snackbar snackbar = Snackbar.make(mCoordinatorLayout, "Item not added to inventory", Snackbar.LENGTH_LONG);
             snackbar.show();
         }
         else {
-            encodeToFirebase();
+            //encodeToFirebase();
             deleteTemporaryStorage();
         }
 
@@ -163,21 +247,33 @@ public class loggedin extends AppCompatActivity {
     }
 
 
-    public void encodeToFirebase() {
-
-        Bitmap bm = BitmapFactory.decodeFile("sdcard/camera_app/cam_image.jpg");
+    public void encodeToFirebase(String itemName, String itemDescription,
+                                 double itemPrice, Bitmap itemImage) {
+      //  Bitmap bm = BitmapFactory.decodeFile("sdcard/camera_app/cam_image.jpg");
+        Bitmap bm = itemImage;
         int nh = (int) (bm.getHeight() * (512.0 / bm.getWidth()));
         Bitmap bmap = Bitmap.createScaledBitmap(bm, 512, nh, true);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmap.compress(Bitmap.CompressFormat.JPEG, 90, baos); //bm is the bitmap object
+        bmap.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
         byte[] b = baos.toByteArray();
         String imageEncoded = com.firebase.client.utilities.Base64.encodeBytes(b);
         Toast.makeText(getApplicationContext(), "created image for current user", Toast.LENGTH_LONG).show();
         Map<String, String> photoMap = new HashMap<String, String>();
-        photoMap.put("description", "example Description ++");
+        photoMap.put("description", itemDescription);
         photoMap.put("imageString", imageEncoded);
+        photoMap.put("itemName",itemName);
+        photoMap.put("price",Double.toString(itemPrice));
         FBref.child("photos").child(userID).push().setValue(photoMap);
+    }
 
+    public Bitmap getImageBitmap(){
+        Bitmap bm = BitmapFactory.decodeFile("sdcard/camera_app/cam_image.jpg");
+        Bitmap bmap = null;
+        if(bm!=null) {
+            int nh = (int) (bm.getHeight() * (512.0 / bm.getWidth()));
+            bmap = Bitmap.createScaledBitmap(bm, 512, nh, true);
+        }
+        return bmap;
     }
 
     public void deleteTemporaryStorage(){
@@ -198,8 +294,8 @@ public class loggedin extends AppCompatActivity {
 //
 //                    //decode encoded image to BITMAP
 //                    if (encodedImage != null) {
-////                        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
-////                        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+//                        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+//                        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 //                        belongings.add(new Belonging(imageDescription, encodedImage));
 //                    }
 //                }
@@ -324,16 +420,5 @@ public class loggedin extends AppCompatActivity {
             mItemImage =(ImageView)itemView.findViewById(R.id.item_photo);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
 }
 

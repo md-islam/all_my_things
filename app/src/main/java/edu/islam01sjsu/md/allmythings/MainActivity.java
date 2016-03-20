@@ -100,13 +100,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+}
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Firebase.setAndroidContext(this);
+    }
 
-
-
-
-
-
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Firebase.setAndroidContext(this);
     }
 }

@@ -36,6 +36,19 @@ public class signup extends AppCompatActivity {
     private String passwordInput;
     private String repeatPasswordInput;
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Firebase.setAndroidContext(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Firebase.setAndroidContext(this);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

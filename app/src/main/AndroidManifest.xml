@@ -27,9 +27,10 @@
         </activity>
         <activity android:name=".signup" >
         </activity>
-        <activity android:name=".loggedin" >
-        </activity>
-        <activity android:name=".itemRegistration" >
+        <activity android:name=".loggedin"
+                  android:screenOrientation="portrait"
+                  android:configChanges="keyboardHidden|orientation|screenSize">
+
         </activity>
     </application>
 
