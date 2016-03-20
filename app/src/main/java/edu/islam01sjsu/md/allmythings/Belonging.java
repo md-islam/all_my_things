@@ -10,28 +10,19 @@ public class Belonging {
     String description;
     String itemName;
     double price;
+    String datePurchased;
 
-
-
-
-    // Bitmap itemBitmap;
-    // String itemName;
-    // String itemDescription
-    // date taken
     // lent
-    //
+    // location purchased from
     public Belonging(){
-
     }
-
-
-    public Belonging(String description, String imageString, String itemName, Double price){
+    public Belonging(String description, String imageString, String itemName, double price, String datePurchased){
         this.description = description;
         this.imageString = imageString;
         this.itemName = itemName;
         this.price = price;
+        this.datePurchased = datePurchased;
     }
-
 
     public String getImageString(){
         return imageString;
@@ -45,10 +36,7 @@ public class Belonging {
     public String getItemName() {
         return itemName;
     }
-
-
-
-
-
-
+    public String getDatePurchased() {
+        return datePurchased;
+    }
 }

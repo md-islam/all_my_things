@@ -1,5 +1,7 @@
 package edu.islam01sjsu.md.allmythings;
 
+import android.app.DatePickerDialog;
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +23,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,11 +39,12 @@ import com.firebase.ui.FirebaseRecyclerAdapter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 public class loggedin extends AppCompatActivity {
-    FirebaseRecyclerAdapter<Belonging,ItemViewHolder> fAdapter;
+    FirebaseRecyclerAdapter<Belonging, ItemViewHolder> fAdapter;
 
     //private List<Belonging> belongings;
     RecyclerView mRecyclerView;    // Declaring RecyclerView
@@ -56,11 +60,13 @@ public class loggedin extends AppCompatActivity {
 
     //**dialog fragment components;
     private Button mSaveButton;
+    Calendar calendar = Calendar.getInstance();
     private Button mTakePictureButton;
     private EditText mItemEdit;
     private EditText mItemDescription;
     private EditText mItemPriceEdit;
     private ImageView mItemImage;
+    private EditText mDatePicker;
 
 
 
@@ -82,19 +88,17 @@ public class loggedin extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);                 // Creating a layout Manager
         mRecyclerView.setLayoutManager(mLayoutManager);                 // Setting the layout Manager
         fAdapter = new FirebaseRecyclerAdapter<Belonging, ItemViewHolder>(Belonging.class,
-                                                                           R.layout.card_layout,ItemViewHolder.class
-                                                                            ,FBref.child("photos").child(userID)) {
+                R.layout.card_layout, ItemViewHolder.class
+                , FBref.child("photos").child(userID)) {
             @Override
             protected void populateViewHolder(ItemViewHolder ivh, Belonging belonging, int i) {
 
-                  ivh.mItemDescription.setText(belonging.itemName);
-                  byte[] decodedString = android.util.Base64.decode(belonging.imageString, android.util.Base64.DEFAULT);
-                  Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                  ivh.mItemImage.setImageBitmap(decodedByte);
+                ivh.mItemDescription.setText(belonging.itemName);
+                byte[] decodedString = android.util.Base64.decode(belonging.imageString, android.util.Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                ivh.mItemImage.setImageBitmap(decodedByte);
             }
         };
-
-
 
 
         mRecyclerView.setAdapter(fAdapter);                              // Setting the adapter to RecyclerView
@@ -102,7 +106,7 @@ public class loggedin extends AppCompatActivity {
             @Override
             public void onClick(View view, int position) {
                 //Movie movie = movieList.get(position);
-                Toast.makeText(getApplicationContext(), position+" is selected!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), position + " is selected!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -123,7 +127,7 @@ public class loggedin extends AppCompatActivity {
 //                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
 //                startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
 
-              showItemRegistrationDialog();
+                showItemRegistrationDialog();
 
 
             }
@@ -138,10 +142,13 @@ public class loggedin extends AppCompatActivity {
         Firebase.setAndroidContext(getApplicationContext());
     }
 
-    public void showItemRegistrationDialog(){
+
+
+
+    public void showItemRegistrationDialog() {
         FragmentManager fm = getSupportFragmentManager();
         RegisterItemDialog rid = new RegisterItemDialog();
-        rid.show(fm,"fragment_register_item");
+        rid.show(fm, "fragment_register_item");
         fm.executePendingTransactions();
         final Dialog dialog = rid.getDialog();
 
@@ -153,9 +160,38 @@ public class loggedin extends AppCompatActivity {
         mItemPriceEdit = (EditText) dialog.findViewById(R.id.item_price);
         mSaveButton = (Button) dialog.findViewById(R.id.dialogSaveButton);
         mItemImage = (ImageView) dialog.findViewById(R.id.dialog_item_image);
+        mDatePicker = (EditText) dialog.findViewById(R.id.dialog_date_purchased);
 
+        final DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                mDatePicker.setText(monthOfYear+1+"/"+dayOfMonth+"/"+year);
+            }
+        };
 
         //Set actions
+        mDatePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+//                Toast.makeText(getApplicationContext(), "Date picker clicked",
+//                        Toast.LENGTH_SHORT).show();
+
+                new DatePickerDialog(loggedin.this, listener,
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH))
+                        .show();
+
+            }
+        });
+
+
+
+
+
+
+
         mTakePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,27 +210,25 @@ public class loggedin extends AppCompatActivity {
                 String itemName = mItemEdit.getText().toString();
                 String itemDescription = mItemDescription.getText().toString();
                 double itemPrice = 0;
-                Bitmap imageFromPreview=null;
-                if(!(mItemPriceEdit.getText().toString().equals(""))){
+                String datePurchased = mDatePicker.getText().toString();
+                Bitmap imageFromPreview = null;
+
+                if (!(mItemPriceEdit.getText().toString().equals(""))) {
                     itemPrice = Double.parseDouble(mItemPriceEdit.getText().toString());
                 }
-                if(mItemImage.getDrawable()!=null)
-                {
-                    imageFromPreview=((BitmapDrawable)mItemImage.getDrawable()).getBitmap();
-                }
-                else{
+                if (mItemImage.getDrawable() != null) {
+                    imageFromPreview = ((BitmapDrawable) mItemImage.getDrawable()).getBitmap();
+                } else {
                     //code to show a toast
                 }
-                if(!(mItemPriceEdit.getText().toString().equals("")) && !(itemName.equals("")) &&
-                        !(itemDescription.equals("")) && imageFromPreview !=null)
-                    {
-                        //encode this shit to firebase
-                        encodeToFirebase(itemName,itemDescription, itemPrice, imageFromPreview);
-                        dialog.dismiss();
+                if (!(mItemPriceEdit.getText().toString().equals("")) && !(itemName.equals("")) &&
+                        !(itemDescription.equals("")) && imageFromPreview != null && !(datePurchased.equals(""))) {
+                    //encode this shit to firebase
+                    encodeToFirebase(itemName, itemDescription, itemPrice, imageFromPreview, datePurchased);
+                    dialog.dismiss();
 
 
-                    }
-                else{
+                } else {
                     Toast.makeText(getApplicationContext(), "All data including image must be provided",
                             Toast.LENGTH_SHORT).show();
                 }
@@ -208,7 +242,7 @@ public class loggedin extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Bitmap bm = getImageBitmap();
-        if(bm!=null && mItemImage != null){
+        if (bm != null && mItemImage != null) {
             mItemImage.setImageBitmap(bm);
         }
     }
@@ -224,8 +258,6 @@ public class loggedin extends AppCompatActivity {
     }
 
 
-
-
     // needs refining considering app activity lifecycle
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -233,12 +265,10 @@ public class loggedin extends AppCompatActivity {
         onResume();
 
         //picture not taken handler and back button is hit
-        if (resultCode != RESULT_OK)
-        {
+        if (resultCode != RESULT_OK) {
             Snackbar snackbar = Snackbar.make(mCoordinatorLayout, "Item not added to inventory", Snackbar.LENGTH_LONG);
             snackbar.show();
-        }
-        else {
+        } else {
             //encodeToFirebase();
             deleteTemporaryStorage();
         }
@@ -248,8 +278,8 @@ public class loggedin extends AppCompatActivity {
 
 
     public void encodeToFirebase(String itemName, String itemDescription,
-                                 double itemPrice, Bitmap itemImage) {
-      //  Bitmap bm = BitmapFactory.decodeFile("sdcard/camera_app/cam_image.jpg");
+                                 double itemPrice, Bitmap itemImage, String datePurchased) {
+        //  Bitmap bm = BitmapFactory.decodeFile("sdcard/camera_app/cam_image.jpg");
         Bitmap bm = itemImage;
         int nh = (int) (bm.getHeight() * (512.0 / bm.getWidth()));
         Bitmap bmap = Bitmap.createScaledBitmap(bm, 512, nh, true);
@@ -261,22 +291,23 @@ public class loggedin extends AppCompatActivity {
         Map<String, String> photoMap = new HashMap<String, String>();
         photoMap.put("description", itemDescription);
         photoMap.put("imageString", imageEncoded);
-        photoMap.put("itemName",itemName);
-        photoMap.put("price",Double.toString(itemPrice));
+        photoMap.put("itemName", itemName);
+        photoMap.put("price", Double.toString(itemPrice));
+        photoMap.put("datePurchased", datePurchased);
         FBref.child("photos").child(userID).push().setValue(photoMap);
     }
 
-    public Bitmap getImageBitmap(){
+    public Bitmap getImageBitmap() {
         Bitmap bm = BitmapFactory.decodeFile("sdcard/camera_app/cam_image.jpg");
         Bitmap bmap = null;
-        if(bm!=null) {
+        if (bm != null) {
             int nh = (int) (bm.getHeight() * (512.0 / bm.getWidth()));
             bmap = Bitmap.createScaledBitmap(bm, 512, nh, true);
         }
         return bmap;
     }
 
-    public void deleteTemporaryStorage(){
+    public void deleteTemporaryStorage() {
         String path = "sdcard/camera_app/cam_image.jpg";
         File deleteFile = new File(path);
         deleteFile.delete();
@@ -309,7 +340,6 @@ public class loggedin extends AppCompatActivity {
 //        });
 //
 //    }
-
 
 
     @Override
@@ -351,9 +381,7 @@ public class loggedin extends AppCompatActivity {
     }
 
 
-
     ////// this is recycler view action part
-
 
 
     public interface ClickListener {
@@ -407,7 +435,6 @@ public class loggedin extends AppCompatActivity {
     ///// END recycler view actionLISTENER PART part
 
 
-
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
         TextView mItemDescription;
@@ -415,9 +442,9 @@ public class loggedin extends AppCompatActivity {
 
         public ItemViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.cv);
-            mItemDescription = (TextView)itemView.findViewById(R.id.item_description);
-            mItemImage =(ImageView)itemView.findViewById(R.id.item_photo);
+            cv = (CardView) itemView.findViewById(R.id.cv);
+            mItemDescription = (TextView) itemView.findViewById(R.id.item_description);
+            mItemImage = (ImageView) itemView.findViewById(R.id.item_photo);
         }
     }
 }
