@@ -41,12 +41,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class loggedin extends AppCompatActivity {
     FirebaseRecyclerAdapter<Belonging, ItemViewHolder> fAdapter;
 
-    //private List<Belonging> belongings;
+    private List<Belonging> belongings;
     RecyclerView mRecyclerView;    // Declaring RecyclerView
     Firebase FBref = new Firebase("https://allmythings2016.firebaseio.com/");
     RecyclerView.Adapter mAdapter; // Declaring Adapter For Recycler View
@@ -67,7 +68,6 @@ public class loggedin extends AppCompatActivity {
     private EditText mItemPriceEdit;
     private ImageView mItemImage;
     private EditText mDatePicker;
-
 
 
     @Override
@@ -143,8 +143,6 @@ public class loggedin extends AppCompatActivity {
     }
 
 
-
-
     public void showItemRegistrationDialog() {
         FragmentManager fm = getSupportFragmentManager();
         RegisterItemDialog rid = new RegisterItemDialog();
@@ -165,7 +163,7 @@ public class loggedin extends AppCompatActivity {
         final DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                mDatePicker.setText(monthOfYear+1+"/"+dayOfMonth+"/"+year);
+                mDatePicker.setText(monthOfYear + 1 + "/" + dayOfMonth + "/" + year);
             }
         };
 
@@ -185,11 +183,6 @@ public class loggedin extends AppCompatActivity {
 
             }
         });
-
-
-
-
-
 
 
         mTakePictureButton.setOnClickListener(new View.OnClickListener() {
