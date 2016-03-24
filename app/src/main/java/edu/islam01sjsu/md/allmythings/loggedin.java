@@ -17,6 +17,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.GestureDetector;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
@@ -47,13 +48,11 @@ import java.util.Map;
 public class loggedin extends AppCompatActivity {
     FirebaseRecyclerAdapter<Belonging, ItemViewHolder> fAdapter;
 
-    private List<Belonging> belongings;
+    //private List<Belonging> belongings;
     RecyclerView mRecyclerView;    // Declaring RecyclerView
     Firebase FBref = new Firebase("https://allmythings2016.firebaseio.com/");
-    RecyclerView.Adapter mAdapter; // Declaring Adapter For Recycler View
     RecyclerView.LayoutManager mLayoutManager;  // Declaring Layout Manager as a linear layout manager
     CoordinatorLayout mCoordinatorLayout;
-    FragmentManager fm = getSupportFragmentManager();
     String userID = FBref.getAuth().getUid();
     private FloatingActionButton mFab;
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -88,8 +87,7 @@ public class loggedin extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);                 // Creating a layout Manager
         mRecyclerView.setLayoutManager(mLayoutManager);                 // Setting the layout Manager
         fAdapter = new FirebaseRecyclerAdapter<Belonging, ItemViewHolder>(Belonging.class,
-                R.layout.card_layout, ItemViewHolder.class
-                , FBref.child("photos").child(userID)) {
+                R.layout.card_layout, ItemViewHolder.class, FBref.child("photos").child(userID)) {
             @Override
             protected void populateViewHolder(ItemViewHolder ivh, Belonging belonging, int i) {
 
@@ -98,6 +96,7 @@ public class loggedin extends AppCompatActivity {
                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                 ivh.mItemImage.setImageBitmap(decodedByte);
             }
+
         };
 
 
@@ -105,15 +104,23 @@ public class loggedin extends AppCompatActivity {
         mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), mRecyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                //Movie movie = movieList.get(position);
-                Toast.makeText(getApplicationContext(), position + " is selected!", Toast.LENGTH_SHORT).show();
+                //Movi e movie = movieList.get(position);
+                Toast.makeText(getApplicationContext(), position + " is selected!= " + fAdapter.getRef(position
+                ).toString(), Toast.LENGTH_SHORT).show();
+
+
             }
 
             @Override
             public void onLongClick(View view, int position) {
 
+                Toast.makeText(getApplicationContext(), "" + fAdapter.getItemId(position) + " " + fAdapter.getItem(position).getItemName(), Toast.LENGTH_SHORT).show();
+                //fAdapter.getRef(position).removeValue();
             }
         }));
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
 
 
         //***********************//
@@ -126,32 +133,22 @@ public class loggedin extends AppCompatActivity {
 //                File file = getFile();
 //                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
 //                startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
-
                 showItemRegistrationDialog();
-
-
             }
         });
-
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loggedin);
         Firebase.setAndroidContext(getApplicationContext());
     }
-
-
     public void showItemRegistrationDialog() {
         FragmentManager fm = getSupportFragmentManager();
         RegisterItemDialog rid = new RegisterItemDialog();
         rid.show(fm, "fragment_register_item");
         fm.executePendingTransactions();
         final Dialog dialog = rid.getDialog();
-
-
-        //initialize buttons
         mTakePictureButton = (Button) dialog.findViewById(R.id.dialogTakePictureButton);
         mItemEdit = (EditText) dialog.findViewById(R.id.item_name);
         mItemDescription = (EditText) dialog.findViewById(R.id.item_description);
@@ -159,23 +156,16 @@ public class loggedin extends AppCompatActivity {
         mSaveButton = (Button) dialog.findViewById(R.id.dialogSaveButton);
         mItemImage = (ImageView) dialog.findViewById(R.id.dialog_item_image);
         mDatePicker = (EditText) dialog.findViewById(R.id.dialog_date_purchased);
-
         final DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 mDatePicker.setText(monthOfYear + 1 + "/" + dayOfMonth + "/" + year);
             }
         };
-
-        //Set actions
         mDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-//                Toast.makeText(getApplicationContext(), "Date picker clicked",
-//                        Toast.LENGTH_SHORT).show();
-
-                new DatePickerDialog(loggedin.this, listener,
+                      new DatePickerDialog(loggedin.this, listener,
                         calendar.get(Calendar.YEAR),
                         calendar.get(Calendar.MONTH),
                         calendar.get(Calendar.DAY_OF_MONTH))
@@ -183,7 +173,6 @@ public class loggedin extends AppCompatActivity {
 
             }
         });
-
 
         mTakePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -426,7 +415,7 @@ public class loggedin extends AppCompatActivity {
         }
     }
     ///// END recycler view actionLISTENER PART part
-
+    //SWIPE ACTIONS: DELETE
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
@@ -440,5 +429,39 @@ public class loggedin extends AppCompatActivity {
             mItemImage = (ImageView) itemView.findViewById(R.id.item_photo);
         }
     }
+
+    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            int position = viewHolder.getAdapterPosition();
+
+            //setting backupItem and URL.
+            String backuptoRestoreLocation = fAdapter.getRef(position).toString();
+            final Belonging temporaryBackupItem = fAdapter.getItem(position);
+            final Firebase targetDeleteLocation = new Firebase(backuptoRestoreLocation);
+
+
+            fAdapter.getRef(position).removeValue();
+
+            //Snackbar <code>
+
+            Snackbar snackbar = Snackbar
+                    .make(mCoordinatorLayout, "Image is deleted", Snackbar.LENGTH_LONG)
+                    .setAction("UNDO", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            targetDeleteLocation.setValue(temporaryBackupItem);
+                            Snackbar snackbar1 = Snackbar.make(mCoordinatorLayout, "Message is restored!", Snackbar.LENGTH_SHORT);
+                            snackbar1.show();
+                        }
+                    });
+
+            snackbar.show();
+        }
+    };
 }
 

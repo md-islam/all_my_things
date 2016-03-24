@@ -1,0 +1,132 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent">
+
+
+    <TableRow
+        android:id="@+id/item_row_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/fragment_item_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:width="300px"
+            android:height="100px"
+            android:text="Item:"
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+        <TextView
+            android:id="@+id/fragment_item_text_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:width="470px"
+            android:height="100px"
+            android:text="Insert Item name here"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/description_row_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/fragment_description_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:width="300px"
+            android:height="100px"
+            android:text="Description: "
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+        <TextView
+            android:id="@+id/fragment_description_text_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:width="470px"
+            android:height="100px"
+            android:text="Insert description here"
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/price_row_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/fragment_priceview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:width="300px"
+            android:height="100px"
+            android:text="Price: "
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+        <TextView
+            android:id="@+id/fragment_price_text_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:width="470px"
+            android:height="100px"
+            android:text="Insert price here"
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/datePurchased_row_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/fragment_datePurchasedview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:width="300px"
+            android:height="100px"
+            android:text="Date Purchased: "
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+
+        <TextView
+            android:id="@+id/fragment_datePurchasedView_text_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:width="470px"
+            android:height="100px"
+            android:text="3/4/2016"
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/image_row_5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/fragment_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:width="300px"
+            android:height="100px"
+            android:text="Image: "
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+
+        <ImageView
+            android:id="@+id/fragment_image_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:width="470px"
+            android:height="100px"
+            android:src="@drawable/ic_example"
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+    </TableRow>
+
+
+
+
+
+</TableLayout>
