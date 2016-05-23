@@ -10,5 +10,7 @@
     <color name="ripple">#F06292</color>
     <color name="accent">#E91E63</color>
     <color name="accent_pressed">#C2185B</color>
+    <color name="field_color">#FFFFFF </color>
+    <color name="hint_color">#FFF27A7A</color>
 
 </resources>

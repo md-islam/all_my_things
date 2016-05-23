@@ -3,6 +3,7 @@ package edu.islam01sjsu.md.allmythings;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,6 +14,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,7 +37,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.firebase.ui.FirebaseRecyclerAdapter;
 
 import java.io.ByteArrayOutputStream;
@@ -67,7 +72,7 @@ public class loggedin extends AppCompatActivity {
     private EditText mItemPriceEdit;
     private ImageView mItemImage;
     private EditText mDatePicker;
-
+    private String userNameString;
 
     @Override
     protected void onStart() {
@@ -80,6 +85,24 @@ public class loggedin extends AppCompatActivity {
         //initialize belongings
         // belongings = new ArrayList<>();
         userID = FBref.getAuth().getUid();
+        Firebase userNameRef = FBref.child("users").child((String)userID).child("userName");
+
+        //YOUR TREE
+        //Firebase
+
+        userNameRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userNameString = (String) dataSnapshot.getValue();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+        Toast.makeText(getApplicationContext(),userNameString+": UserName", Toast.LENGTH_SHORT).show();
+
 
 
         mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView); // Assigning the RecyclerView Object to the xml View
@@ -100,15 +123,19 @@ public class loggedin extends AppCompatActivity {
         };
 
 
-        mRecyclerView.setAdapter(fAdapter);                              // Setting the adapter to RecyclerView
+        mRecyclerView.setAdapter(fAdapter);         // Setting the adapter to RecyclerView
         mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), mRecyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                //Movi e movie = movieList.get(position);
-                Toast.makeText(getApplicationContext(), position + " is selected!= " + fAdapter.getRef(position
-                ).toString(), Toast.LENGTH_SHORT).show();
+                //Movie movie = movieList.get(position);
+                //Toast.makeText(getApplicationContext(), position + " is selected!= " +
+                //        fAdapter.getRef(position).toString(), Toast.LENGTH_SHORT).show();
+                Belonging touchedBelonging = fAdapter.getItem(position);
+                Toast.makeText(getApplicationContext(),touchedBelonging.getDescription(), Toast.LENGTH_SHORT).show();
 
-
+//                FragmentManager fman = getSupportFragmentManager();
+//                ItemViewFragment ivf = (ItemViewFragment) fman.findFragmentById(R.id.fragment_itemview_table);
+//                ivf.setUpItemToView(touchedBelonging);
             }
 
             @Override
@@ -121,11 +148,7 @@ public class loggedin extends AppCompatActivity {
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
-
-
         //***********************//
-
-
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,12 +160,14 @@ public class loggedin extends AppCompatActivity {
             }
         });
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loggedin);
         Firebase.setAndroidContext(getApplicationContext());
     }
+
     public void showItemRegistrationDialog() {
         FragmentManager fm = getSupportFragmentManager();
         RegisterItemDialog rid = new RegisterItemDialog();
@@ -165,7 +190,7 @@ public class loggedin extends AppCompatActivity {
         mDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                      new DatePickerDialog(loggedin.this, listener,
+                new DatePickerDialog(loggedin.this, listener,
                         calendar.get(Calendar.YEAR),
                         calendar.get(Calendar.MONTH),
                         calendar.get(Calendar.DAY_OF_MONTH))
@@ -297,6 +322,7 @@ public class loggedin extends AppCompatActivity {
     }
 
 
+//FOR ITERATING VALUES:
 //    public void decodeFromFirebase() {
 //        FBref.child("photos").child(userID).addValueEventListener(new ValueEventListener() {
 //            @Override
@@ -415,7 +441,7 @@ public class loggedin extends AppCompatActivity {
         }
     }
     ///// END recycler view actionLISTENER PART part
-    //SWIPE ACTIONS: DELETE
+
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
@@ -430,17 +456,24 @@ public class loggedin extends AppCompatActivity {
         }
     }
 
+
+    //SWIPE ACTIONS: DELETE, ARcHIVE(PENDing implementation)
     ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
         @Override
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
             return false;
         }
+
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
             int position = viewHolder.getAdapterPosition();
 
             //setting backupItem and URL.
+
+            //URL
             String backuptoRestoreLocation = fAdapter.getRef(position).toString();
+
+            //Belonging object from firebase on recyclerView
             final Belonging temporaryBackupItem = fAdapter.getItem(position);
             final Firebase targetDeleteLocation = new Firebase(backuptoRestoreLocation);
 
@@ -448,14 +481,13 @@ public class loggedin extends AppCompatActivity {
             fAdapter.getRef(position).removeValue();
 
             //Snackbar <code>
-
             Snackbar snackbar = Snackbar
                     .make(mCoordinatorLayout, "Image is deleted", Snackbar.LENGTH_LONG)
                     .setAction("UNDO", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             targetDeleteLocation.setValue(temporaryBackupItem);
-                            Snackbar snackbar1 = Snackbar.make(mCoordinatorLayout, "Message is restored!", Snackbar.LENGTH_SHORT);
+                            Snackbar snackbar1 = Snackbar.make(mCoordinatorLayout, "Image is restored!", Snackbar.LENGTH_SHORT);
                             snackbar1.show();
                         }
                     });

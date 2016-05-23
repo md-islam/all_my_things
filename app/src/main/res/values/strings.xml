@@ -1,14 +1,14 @@
 <resources>
     <string name="app_name">AllMyThings</string>
     <string name="app_name_text">All My Things</string>
-    <string name="loginEmailHint">example@xyz.com</string>
-    <string name="signUpEmailHint">Email address</string>
-    <string name="loginPasswordHint">********</string>
+    <string name="loginEmailHint">Email</string>
+    <string name="signUpEmailHint">Email</string>
+    <string name="loginPasswordHint">Password</string>
     <string name="create_account_clickable">No account yet? Create one</string>
-    <string name="loginButtonText">LOGIN</string>
+    <string name="loginButtonText">Sign in</string>
     <string name="sign_up_text">Join AllMyThings</string>
     <string name="forgot_password_text">Forgot password?</string>
-    <string name="signUP_button_text">sign up !</string>
+    <string name="signUP_button_text">Sign up </string>
     <string name="logout_text">Log Out</string>
     <string name="openDrawer">open navigation drawer</string>
     <string name="closeDrawer">close navigation drawer</string>
@@ -16,6 +16,14 @@
     <string name="item_name">ITEM NAME</string>
     <string name="item_description">description</string>
     <string name="item_price">Price</string>
+    <string name="error_hint_first_name">Enter your first name</string>
+    <string name="error_hint_last_name">Enter your last name </string>
+    <string name="error_hint_email">Enter a valid email address</string>
+    <string name="error_hint_username">Enter a username</string>
+    <string name="error_hint_password">Enter a password</string>
+    <string name="error_hint_repeat_password">Passwords dont match</string>
+
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

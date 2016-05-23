@@ -31,4 +31,12 @@
         android:layout_margin="@dimen/fab_margin"
         android:src="@android:drawable/ic_input_add"/>
 
+    <!--<fragment-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="0.7"-->
+        <!--android:name="edu.islam01sjsu.md.allmythings.ItemViewFragment"-->
+        <!--android:id="@+id/fragment_itemview_table"-->
+        <!--tools:layout="@layout/fragment_itemview"></fragment>-->
+
 </android.support.design.widget.CoordinatorLayout>

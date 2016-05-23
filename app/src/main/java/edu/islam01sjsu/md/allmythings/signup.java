@@ -1,10 +1,15 @@
 package edu.islam01sjsu.md.allmythings;
 
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -43,6 +48,13 @@ public class signup extends AppCompatActivity {
     private List<String> userNames = new ArrayList<String>();
     private Boolean isExistingUsername;
 
+    private TextInputLayout mFirstNameWrapper;
+    private TextInputLayout mLastNameWrapper;
+    private TextInputLayout mEmailWrapper;
+    private TextInputLayout mUsernameWrapper;
+    private TextInputLayout mPasswordWrapper;
+    private TextInputLayout mRepeatPasswordWrapper;
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -70,24 +82,35 @@ public class signup extends AppCompatActivity {
         mEmail = (EditText) findViewById(R.id.signUpEmailField);
         mPassword = (EditText) findViewById(R.id.password_field);
         mRepeatPassword = (EditText) findViewById(R.id.repeatPassword_field);
-        mSignUpButton = (Button) findViewById(R.id.loginButton);
+        mSignUpButton = (Button) findViewById(R.id.signUp_Button_signup_activity);
+
+        //initializing the wrappers for animation
+        mFirstNameWrapper = (TextInputLayout) findViewById(R.id.firstName_wrapper_signup_activity);
+        mLastNameWrapper = (TextInputLayout) findViewById(R.id.lastName_wrapper_signUpactivity);
+        mEmailWrapper = (TextInputLayout) findViewById(R.id.email_field_wrapper_signUp_activity);
+        mUsernameWrapper = (TextInputLayout) findViewById(R.id.userNameField_wrapper_signUpActivity);
+        mPasswordWrapper = (TextInputLayout) findViewById(R.id.password_field_wrapper_signUp_activity);
+        mRepeatPasswordWrapper = (TextInputLayout) findViewById(R.id.repeatPassword_field_wrapper_signUpActivity);
+
+        passwordInput = mPassword.getText().toString();
+        repeatPasswordInput = mRepeatPassword.getText().toString();
+
+        mFirstNameWrapper.setHint("First name");
+        mLastNameWrapper.setHint("Last name");
+        mUsernameWrapper.setHint("Username");
+        mEmailWrapper.setHint("Email");
+        mPasswordWrapper.setHint("Password");
+        mRepeatPasswordWrapper.setHint("Repeat password");
+
+
+        mFirstName.addTextChangedListener(new MyTextWatcher(mFirstName));
+        mLastName.addTextChangedListener(new MyTextWatcher(mLastName));
+        mEmail.addTextChangedListener(new MyTextWatcher(mEmail));
+        mRepeatPassword.addTextChangedListener(new MyTextWatcher(mRepeatPassword));
+
 
 
         fillUpUsernamesList();
-
-        //needs to be unique in the database
-
-
-        //need to handle email validation
-        //needs to be unique in the database
-
-
-        //need to handle password matches repeated password (created checker method)
-
-
-        //need to check for uniqueness, equality, regex on sign up in actionListener.
-
-
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,16 +191,7 @@ public class signup extends AppCompatActivity {
     }
 
 
-    /**
-     * To check email confirming email pattern
-     *
-     * @param email
-     * @return boolean checking email validation
-     */
-    private boolean isValidEmail(String email) {
-        Pattern pattern = Patterns.EMAIL_ADDRESS;
-        return pattern.matcher(email).matches();
-    }
+
 
 
     /**
@@ -218,4 +232,124 @@ public class signup extends AppCompatActivity {
     }
 
 
+    private boolean validateFirstName() {
+        if (mFirstName.getText().toString().trim().isEmpty()) {
+            mFirstNameWrapper.setError(getString(R.string.error_hint_first_name));
+            requestFocus(mFirstName);
+            return false;
+        } else {
+            mFirstNameWrapper.setErrorEnabled(false);
+            mFirstNameWrapper.setError(null);
+        }
+        return true;
+    }
+
+    private boolean validateLastName() {
+        if (mLastName.getText().toString().trim().isEmpty()) {
+            mLastNameWrapper.setError(getString(R.string.error_hint_first_name));
+            requestFocus(mLastName);
+            return false;
+        } else {
+            mLastNameWrapper.setErrorEnabled(false);
+            mLastNameWrapper.setError(null);
+        }
+        return true;
+    }
+
+    private boolean validateEmailAddress(){
+        String email = mEmail.getText().toString().trim();
+        if(email.isEmpty()|| !isValidEmail(email)){
+            mEmailWrapper.setError(getString(R.string.error_hint_email));
+            requestFocus(mEmail);
+            return false;
+        }
+        else{
+            mEmailWrapper.setErrorEnabled(false);
+            mEmailWrapper.setError(null);
+        }
+        return true;
+    }
+
+    private boolean validatePassword(){
+        passwordInput = mPassword.getText().toString();
+        repeatPasswordInput = mRepeatPassword.getText().toString();
+        if(!checkPassWordAndConfirmPassword(passwordInput, repeatPasswordInput)||repeatPasswordInput.isEmpty()) {
+            mRepeatPasswordWrapper.setError(getString(R.string.error_hint_repeat_password));
+            requestFocus(mRepeatPassword);
+            return false;
+        }
+        else{
+            mRepeatPasswordWrapper.setErrorEnabled(false);
+            mRepeatPasswordWrapper.setError(null);
+        }
+        return true;
+        }
+
+
+
+
+
+
+
+    /**
+     * To check email confirming email pattern
+     *
+     * @param email
+     * @return boolean checking email validation
+     */
+    private boolean isValidEmail(String email) {
+        Pattern pattern = Patterns.EMAIL_ADDRESS;
+        return pattern.matcher(email).matches();
+    }
+
+
+    private void requestFocus(View view) {
+        if (view.requestFocus()) {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
+    }
+
+    private class MyTextWatcher implements TextWatcher {
+
+        private View view;
+
+        private MyTextWatcher(View view) {
+            this.view = view;
+        }
+
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void afterTextChanged(Editable editable) {
+            switch (view.getId()) {
+                case R.id.firstNameField:
+                    validateFirstName();
+                    break;
+                case R.id.lastNameField:
+                    validateLastName();
+                    break;
+                case R.id.signUpEmailField:
+                    validateEmailAddress();
+                    break;
+                case R.id.repeatPassword_field:
+                    validatePassword();
+                    break;
+//            if(view.getId()==R.id.firstNameField){
+//                validateFirstName();
+//            }
+//            else if(view.getId() == R.id.lastNameField){
+//                validateLastName();
+//            }
+//            else if(view.getId() == R.id.signUpEmailField){
+//                validateEmailAddress();
+//            }
+            }
+        }
+    }
 }
+
+
+
