@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -9,57 +10,80 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="edu.islam01sjsu.md.allmythings.MainActivity"
-    android:background="#be3135">
+    android:background="#be3135"
+    android:orientation="vertical">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/app_name_text"
-        android:id="@+id/textView"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="37dp"
-        android:textColor="#f7ff0b"
-        android:textSize="21dp"/>
+        android:id="@+id/name_of_app"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_marginBottom="55dp"
+        android:textSize="30dp"
+        android:textColor="#f7ff0b"/>
 
+    <LinearLayout
+        android:id="@+id/user_login_fields_mainActivity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/emailFieldWrapper_activity_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/hint_color"
+
+        >
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:ems="10"
         android:id="@+id/login_email"
-        android:hint="@string/loginEmailHint"
-        android:textColorHint="#FFFFFF"
+        android:textColor="@color/field_color"
         android:layout_below="@+id/textView"
-        android:layout_alignLeft="@+id/login_Password"
-        android:layout_alignStart="@+id/login_Password"
         android:layout_marginTop="54dp"
-        android:text="aeinul.islam@gmail.com"/>
+        />
+    </android.support.design.widget.TextInputLayout>
 
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/password_field_wrapper_main_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/hint_color"
+        >
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/login_Password"
-        android:hint="@string/loginPasswordHint"
-        android:textColorHint="#FFFFFF"
+        android:textColor="@color/field_color"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:text="abcd"/>
+        />
+    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/loginButtonText"
         android:id="@+id/loginButton"
-        android:layout_marginTop="41dp"
+        android:layout_marginTop="20dp"
         android:background="#960202"
         android:textColor="#ffffff"
         android:layout_below="@+id/login_Password"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:textSize="17dp"
+        android:textAllCaps="false"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -67,11 +91,12 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/create_account_clickable"
         android:id="@+id/signUP_clickable_text"
-        android:textColor="#ffffff"
+        android:textColor="#FFEBCD"
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/login_Password"
         android:layout_alignEnd="@+id/login_Password"
-        android:layout_marginBottom="41dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="27dp"
         android:onClick="onClick"
         android:clickable="true"/>
 
@@ -82,9 +107,9 @@
         android:text="@string/forgot_password_text"
         android:id="@+id/forgotPassword_clickable_text"
         android:layout_below="@+id/loginButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="14dp"
-        android:textColor="#7ee861"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="27dp"
+        android:textColor="#ffbf00"
         android:textSize="16dp"/>
 
     <EditText
@@ -97,4 +122,6 @@
         android:layout_marginLeft="423dp"
         android:layout_marginStart="423dp"
         android:layout_marginBottom="104dp"/>
-</RelativeLayout>
+
+    </LinearLayout>>
+</LinearLayout>

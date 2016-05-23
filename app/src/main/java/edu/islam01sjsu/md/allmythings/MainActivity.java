@@ -1,11 +1,13 @@
 package edu.islam01sjsu.md.allmythings;
 
 import android.content.Intent;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,17 +15,18 @@ import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
-import java.util.HashMap;
-import java.util.Map;
+
 
 public class MainActivity extends AppCompatActivity {
 
 
-    private TextView mLoginEmail;
-    private TextView mLoginPassword;
+    private EditText mLoginEmail;
+    private EditText mLoginPassword;
     private Button mLogInButton;
     private TextView mForgotPasswordClickable;
     private TextView mSignUpText;
+    private TextInputLayout mEmailWrapper;
+    private TextInputLayout mPasswordWrapper;
 
 
 
@@ -37,8 +40,13 @@ public class MainActivity extends AppCompatActivity {
         FBref = new Firebase("https://allmythings2016.firebaseio.com/");
         mForgotPasswordClickable = (TextView)findViewById(R.id.forgotPassword_clickable_text);
         mLogInButton = (Button)findViewById(R.id.loginButton);
-        mLoginEmail = (TextView)findViewById(R.id.login_email);
-        mLoginPassword = (TextView)findViewById(R.id.login_Password);
+        mLoginEmail = (EditText)findViewById(R.id.login_email);
+        mLoginPassword = (EditText)findViewById(R.id.login_Password);
+
+        mEmailWrapper = (TextInputLayout) findViewById(R.id.emailFieldWrapper_activity_main);
+        mPasswordWrapper = (TextInputLayout) findViewById(R.id.password_field_wrapper_main_activity);
+        mEmailWrapper.setHint("Email");
+        mPasswordWrapper.setHint("Password");
 
 
 

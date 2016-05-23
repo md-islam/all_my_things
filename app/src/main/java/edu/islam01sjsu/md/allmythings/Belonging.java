@@ -30,7 +30,7 @@ public class Belonging {
     public String getDescription(){
         return description;
     }
-    public Double getPrice() {
+    public double getPrice() {
         return price;
     }
     public String getItemName() {
