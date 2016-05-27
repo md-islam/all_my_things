@@ -1,8 +1,13 @@
 package edu.islam01sjsu.md.allmythings;
 
+import android.annotation.TargetApi;
+
+
 import android.content.Intent;
+import android.os.Build;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,7 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.support.v7.app.AppCompatActivity;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -53,14 +58,28 @@ public class MainActivity extends AppCompatActivity {
         //action for signup text which opens another intent
         mSignUpText = (TextView) findViewById(R.id.signUP_clickable_text);
         mSignUpText.setOnClickListener(new View.OnClickListener() {
+            @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
             @Override
             public void onClick(View v) {
-                Intent startSignUp = new Intent(MainActivity.this, signup.class);
-
-
-                startActivity(startSignUp);
+//                Intent startSignUp = new Intent(MainActivity.this, signup.class);
+//
+//
+//                startActivity(startSignUp);
                 //might need an onstart menu here
                 //+++++++++++++++++++++++++//
+
+//                SignUpFragment fragment = new SignUpFragment();
+//                FragmentManager manager = fragment.getChildFragmentManager();
+//                FragmentTransaction transaction = manager.beginTransaction();
+//                transaction.add(R.id.signUp_linear_layout, fragment, "SignUpFragment");
+//                transaction.commit();
+
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.add(R.id.login_activity_frameLayout, new SignUpFragment(), "first_fragment");
+                ft.addToBackStack("back_to_main_activity").commit();
+
+
+
 
             }
         });
